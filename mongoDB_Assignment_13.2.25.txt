@@ -1,0 +1,59 @@
+1. Print all Worker details from the Worker table ordered by FIRST_NAME ascending:
+SELECT * FROM Worker
+ORDER BY FIRST_NAME ASC;
+
+2. Print all Worker details from the Worker table ordered by FIRST_NAME ascending and DEPARTMENT descending:
+SELECT * FROM Worker
+ORDER BY FIRST_NAME ASC, DEPARTMENT DESC;
+
+3. Print details of workers excluding first names “Vipul” and “Satish” from the Worker table:
+SELECT * FROM Worker
+WHERE FIRST_NAME NOT IN ('Vipul', 'Satish');
+
+4. Print details of the Workers whose FIRST_NAME ends with 'h' and contains exactly six characters:
+SELECT * FROM Worker
+WHERE FIRST_NAME LIKE '%h' AND LENGTH(FIRST_NAME) = 6;
+
+5. Fetch the count of employees working in the department ‘Admin’:
+SELECT COUNT(*) AS Employee_Count
+FROM Worker
+WHERE DEPARTMENT = 'Admin';
+
+6. Fetch worker names with salaries >= 50,000 and <= 100,000:
+SELECT FIRST_NAME, LAST_NAME, SALARY
+FROM Worker
+WHERE SALARY BETWEEN 50000 AND 100000;
+
+7. Fetch the number of workers for each department in descending order
+SELECT DEPARTMENT, COUNT(*) AS NumberOfWorkers
+FROM Worker
+GROUP BY DEPARTMENT
+ORDER BY NumberOfWorkers DESC;
+
+8. Determine the 5th highest salary without using TOP or LIMIT:
+WITH RankedSalaries AS (
+    SELECT SALARY, ROW_NUMBER() OVER (ORDER BY SALARY DESC) AS Rank
+    FROM Worker
+    GROUP BY SALARY
+)
+SELECT SALARY AS FifthHighestSalary
+FROM RankedSalaries
+WHERE Rank = 5;
+
+
+9. Fetch the list of employees with the same salary:
+SELECT FIRST_NAME, LAST_NAME, SALARY
+FROM Worker
+WHERE SALARY IN (
+    SELECT SALARY
+    FROM Worker
+    GROUP BY SALARY
+    HAVING COUNT(*) > 1
+);
+
+10.Fetch departments that have less than three people in it:
+SELECT DEPARTMENT
+FROM Worker
+GROUP BY DEPARTMENT
+HAVING COUNT(*) < 3;
+
